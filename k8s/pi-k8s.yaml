@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: speech-daemon
+  namespace: fitches
+  labels:
+    app: speech-daemon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speech-daemon
+  template:
+    metadata:
+      labels:
+        app: speech-daemon
+    spec:
+      containers:
+      - name: speech-daemon
+        image: docker.io/gaf3/pi-k8s-fitches-speech-daemon:0.1
+        securityContext:
+          privileged: true
