@@ -1,5 +1,5 @@
 IMAGE=pi-k8s-fitches-speech-daemon
-VERSION=0.1
+VERSION=0.2
 ACCOUNT=gaf3
 NAMESPACE=fitches
 
