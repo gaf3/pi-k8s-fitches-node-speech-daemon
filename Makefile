@@ -2,6 +2,9 @@ IMAGE=pi-k8s-fitches-speech-daemon
 VERSION=0.2
 ACCOUNT=gaf3
 NAMESPACE=fitches
+VOLUMES=-v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${PWD}/bin/:/opt/pi-k8s/bin/
+
+.PHONY: pull build shell test run push create update delete
 
 pull:
 	docker pull $(ACCOUNT)/$(IMAGE)login 
@@ -9,11 +12,14 @@ pull:
 build:
 	docker build . -t $(ACCOUNT)/$(IMAGE):$(VERSION)
 
-shell: build
-	docker run --device=/dev/vchiq -it $(ACCOUNT)/$(IMAGE):$(VERSION) sh
+shell:
+	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh
 
-run: build
-	docker run --device=/dev/vchiq -it --rm -h $(IMAGE) $(ACCOUNT)/$(IMAGE):$(VERSION)
+test:
+	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) python -m unittest discover test
+
+run:
+	docker run --device=/dev/vchiq -it $(VOLUMES) --rm -h $(IMAGE) $(ACCOUNT)/$(IMAGE):$(VERSION)
 
 push: build
 	docker push $(ACCOUNT)/$(IMAGE):$(VERSION)
