@@ -16,7 +16,7 @@ shell:
 	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh
 
 test:
-	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) python -m unittest discover test
+	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh -c "coverage run -m unittest discover -v test && coverage report -m --include lib/*.py"
 
 run:
 	docker run --device=/dev/vchiq -it $(VOLUMES) --rm -h $(IMAGE) $(ACCOUNT)/$(IMAGE):$(VERSION)

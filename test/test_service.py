@@ -3,6 +3,7 @@ import mock
 
 import os
 import json
+import StringIO
 
 import service
 
@@ -130,6 +131,35 @@ class TestService(unittest.TestCase):
         self.assertEqual(self.daemon.tts.text, "hey")
         self.assertEqual(self.daemon.tts.lang, "murican")
 
+    @mock.patch("gtts.gTTS", MockgTTS)
+    @mock.patch("os.system")
+    @mock.patch("service.time.time")
+    @mock.patch("service.time.sleep")
+    @mock.patch("traceback.format_exc")
+    @mock.patch('sys.stdout', new_callable=StringIO.StringIO)
+    def test_run(self, mock_print, mock_traceback, mock_sleep, mock_time, mock_system):
 
+        mock_time.return_value = 7
 
+        self.daemon.redis.message = json.dumps({
+            "data": {
+                "timestamp": 7,
+                "text": "hey",
+                "language": "murican"
+            }
+        })
 
+        mock_sleep.side_effect = [None, Exception("whoops"), Exception("whoops")]
+        mock_traceback.side_effect = ["spirograph", Exception("doh")]
+
+        self.assertRaisesRegexp(Exception, "doh", self.daemon.run)
+
+        self.assertEqual(self.daemon.tts.text, "hey")
+        self.assertEqual(self.daemon.tts.lang, "murican")
+        self.assertEqual(self.daemon.tts.saved, "blah.mp3")
+        mock_system.assert_called_with("omxplayer blah.mp3")
+        self.assertEqual(mock_print.getvalue().split("\n")[:-1], [
+            "whoops",
+            "spirograph",
+            "whoops"
+        ])
