@@ -24,11 +24,11 @@ run:
 push: build
 	docker push $(ACCOUNT)/$(IMAGE):$(VERSION)
 
-create: push
-	kubectl -n $(NAMESPACE) create -f k8s/pi-k8s.yaml
+create:
+	kubectl create -f k8s/pi-k8s.yaml
 
-update: push
-	kubectl -n $(NAMESPACE) replace -f k8s/pi-k8s.yaml
+update:
+	kubectl replace -f k8s/pi-k8s.yaml
 
 delete:
-	kubectl -n $(NAMESPACE) delete -f k8s/pi-k8s.yaml
+	kubectl delete -f k8s/pi-k8s.yaml
