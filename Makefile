@@ -7,7 +7,7 @@ VOLUMES=-v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${P
 .PHONY: pull build shell test run push create update delete
 
 pull:
-	docker pull $(ACCOUNT)/$(IMAGE)login 
+	docker pull $(ACCOUNT)/$(IMAGE)
 
 build:
 	docker build . -t $(ACCOUNT)/$(IMAGE):$(VERSION)
