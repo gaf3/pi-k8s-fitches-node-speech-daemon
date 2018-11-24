@@ -14,7 +14,7 @@ class MockRedis(object):
         self.host = host
         self.port = port
         self.channel = None
-        self.message = None
+        self.messages = []
 
     def pubsub(self):
 
@@ -26,7 +26,7 @@ class MockRedis(object):
 
     def get_message(self):
 
-        return self.message
+        return self.messages.pop(0)
 
 
 class MockgTTS(object):
@@ -102,31 +102,34 @@ class TestService(unittest.TestCase):
 
         self.daemon.subscribe()
 
-        self.daemon.redis.message = json.dumps({
-            "data": {
-                "timestamp": 7
+        self.daemon.redis.messages = [
+            {
+                "data": json.dumps({
+                    "timestamp": 7
+                })
+            },
+            {
+                "data": json.dumps({
+                    "timestamp": 7,
+                    "text": "hey"
+                })
+            },
+            {
+                "data": json.dumps({
+                    "timestamp": 7,
+                    "text": "hey",
+                    "language": "murican"
+                })
             }
-        })
+        ]
+        
         self.daemon.process(8)
         self.assertIsNone(self.daemon.tts)
 
-        self.daemon.redis.message = json.dumps({
-            "data": {
-                "timestamp": 7,
-                "text": "hey"
-            }
-        })
         self.daemon.process(6)
         self.assertEqual(self.daemon.tts.text, "hey")
-        self.assertIsNone(self.daemon.tts.lang)
+        self.assertEqual(self.daemon.tts.lang, "en")
 
-        self.daemon.redis.message = json.dumps({
-            "data": {
-                "timestamp": 7,
-                "text": "hey",
-                "language": "murican"
-            }
-        })
         self.daemon.process(6)
         self.assertEqual(self.daemon.tts.text, "hey")
         self.assertEqual(self.daemon.tts.lang, "murican")
@@ -141,13 +144,17 @@ class TestService(unittest.TestCase):
 
         mock_time.return_value = 7
 
-        self.daemon.redis.message = json.dumps({
-            "data": {
-                "timestamp": 7,
-                "text": "hey",
-                "language": "murican"
-            }
-        })
+        self.daemon.redis.messages = [
+            {
+                "data": json.dumps({
+                    "timestamp": 7,
+                    "text": "hey",
+                    "language": "murican"
+                })
+            },
+            None,
+            None
+        ]
 
         mock_sleep.side_effect = [None, Exception("whoops"), Exception("whoops")]
         mock_traceback.side_effect = ["spirograph", Exception("doh")]

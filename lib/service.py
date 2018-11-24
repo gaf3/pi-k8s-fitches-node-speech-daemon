@@ -34,7 +34,7 @@ class Daemon(object):
         self.pubsub = self.redis.pubsub()
         self.pubsub.subscribe(self.channel) 
 
-    def speak(self, text, language=None):
+    def speak(self, text, language):
         """
         Speaks the text in the language
         """
@@ -48,13 +48,18 @@ class Daemon(object):
         Processes a message from the channel if later than the daemons start time
         """
 
-        message = json.loads(self.pubsub.get_message())['data']
+        message = self.pubsub.get_message()
 
-        if message["timestamp"] < start:
+        if not message:
             return
 
-        if "node" not in message or message["node"] == self.node:
-            self.speak(message["text"], (message["language"] if "language" in message else None))
+        data = json.loads(message['data'])
+
+        if data["timestamp"] < start:
+            return
+
+        if "node" not in data or data["node"] == self.node:
+            self.speak(data["text"], data.get("language", "en"))
             
     def run(self):
         """

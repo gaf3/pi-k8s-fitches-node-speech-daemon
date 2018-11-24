@@ -18,7 +18,8 @@ spec:
         audio: enabled
       containers:
       - name: speech-daemon
-        image: docker.io/gaf3/pi-k8s-fitches-speech-daemon:0.3
+        image: docker.io/gaf3/pi-k8s-fitches-speech-daemon:0.4
+        imagePullPolicy: Always
         env:
           - name: K8S_NODE
             valueFrom:
