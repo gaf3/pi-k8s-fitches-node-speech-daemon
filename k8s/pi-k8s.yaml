@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: speech-daemon
+  name: node-speech-daemon
   namespace: fitches
   labels:
-    app: speech-daemon
+    app: node-speech-daemon
 spec:
   selector:
     matchLabels:
-      app: speech-daemon
+      app: node-speech-daemon
   template:
     metadata:
       labels:
-        app: speech-daemon
+        app: node-speech-daemon
     spec:
       nodeSelector:
         audio: enabled
       containers:
-      - name: speech-daemon
-        image: docker.io/gaf3/pi-k8s-fitches-speech-daemon:0.4
+      - name: node-speech-daemon
+        image: docker.io/gaf3/pi-k8s-fitches-node-speech-daemon:0.1
         imagePullPolicy: Always
         env:
           - name: K8S_NODE
