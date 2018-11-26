@@ -1,2 +1,2 @@
-# pi-k8s-fitches-speech-daemon
-Reads from Redis queue to speak phases towards a spefic RPi
+# pi-k8s-fitches-node-speech-daemon
+Reads from Redis queue to speak phases towards a spefic RPi on a node
