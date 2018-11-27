@@ -34,6 +34,6 @@ spec:
           - name: SPEECH_FILE
             value: /tmp/speech.mp3
           - name: SLEEP
-            value: "5"
+            value: "1"
         securityContext:
           privileged: true
