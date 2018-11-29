@@ -1,4 +1,5 @@
 gTTS==2.0.1
+gtts-token==1.1.2
 redis==2.10.6
 mock
 coverage

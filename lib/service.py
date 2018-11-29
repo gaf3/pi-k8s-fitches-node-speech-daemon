@@ -9,6 +9,7 @@ import traceback
 import json
 import redis
 import gtts
+import patch
 
 class Daemon(object):
     """

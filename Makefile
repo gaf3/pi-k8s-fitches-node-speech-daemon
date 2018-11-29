@@ -1,5 +1,5 @@
 IMAGE=pi-k8s-fitches-node-speech-daemon
-VERSION=0.1
+VERSION=0.2
 ACCOUNT=gaf3
 NAMESPACE=fitches
 VOLUMES=-v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${PWD}/bin/:/opt/pi-k8s/bin/
@@ -12,11 +12,12 @@ pull:
 build:
 	docker build . -t $(ACCOUNT)/$(IMAGE):$(VERSION)
 
+
 shell:
 	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh
 
 test:
-	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh -c "coverage run -m unittest discover -v test && coverage report -m --include lib/*.py"
+	docker run --device=/dev/vchiq -it $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(VERSION) sh -c "coverage run -m unittest discover -v test && coverage report -m --include lib/service.py"
 
 run:
 	docker run --device=/dev/vchiq -it $(VOLUMES) --rm -h $(IMAGE) $(ACCOUNT)/$(IMAGE):$(VERSION)
