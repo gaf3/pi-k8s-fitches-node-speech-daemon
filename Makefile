@@ -12,10 +12,7 @@ else
 BASE=debian:jessie
 endif
 
-.PHONY: pull build shell test run push create update delete
-
-pull:
-	docker pull $(ACCOUNT)/$(IMAGE)
+.PHONY: build shell test run push create update delete
 
 build:
 	docker build . -f $(MACHINE).Dockerfile --build-arg BASE=$(BASE) -t $(ACCOUNT)/$(IMAGE):$(VERSION)
