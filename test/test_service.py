@@ -105,11 +105,6 @@ class TestService(unittest.TestCase):
         self.daemon.redis.messages = [
             {
                 "data": json.dumps({
-                    "timestamp": 7
-                })
-            },
-            {
-                "data": json.dumps({
                     "timestamp": 7,
                     "text": "hey"
                 })
@@ -123,26 +118,20 @@ class TestService(unittest.TestCase):
             }
         ]
         
-        self.daemon.process(8)
-        self.assertIsNone(self.daemon.tts)
-
-        self.daemon.process(6)
+        self.daemon.process()
         self.assertEqual(self.daemon.tts.text, "hey")
         self.assertEqual(self.daemon.tts.lang, "en")
 
-        self.daemon.process(6)
+        self.daemon.process()
         self.assertEqual(self.daemon.tts.text, "hey")
         self.assertEqual(self.daemon.tts.lang, "murican")
 
     @mock.patch("gtts.gTTS", MockgTTS)
     @mock.patch("os.system")
-    @mock.patch("service.time.time")
     @mock.patch("service.time.sleep")
     @mock.patch("traceback.format_exc")
     @mock.patch('sys.stdout', new_callable=StringIO.StringIO)
-    def test_run(self, mock_print, mock_traceback, mock_sleep, mock_time, mock_system):
-
-        mock_time.return_value = 7
+    def test_run(self, mock_print, mock_traceback, mock_sleep, mock_system):
 
         self.daemon.redis.messages = [
             {

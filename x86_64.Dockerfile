@@ -1,9 +1,8 @@
-FROM resin/rpi-raspbian
+ARG BASE
+FROM ${BASE}
 
 RUN apt-get update && \
-    apt-get install -y python-pip rpi-update && \
-	rpi-update && \
-    apt-get install -y omxplayer && \
+    apt-get install -y python-pip && \
 	mkdir -p /opt/pi-k8s
 
 WORKDIR /opt/pi-k8s
