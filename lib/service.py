@@ -44,7 +44,7 @@ class Daemon(object):
         self.tts.save(self.speech_file)
         os.system("omxplayer %s" % self.speech_file)
 
-    def process(self, start):
+    def process(self):
         """
         Processes a message from the channel if later than the daemons start time
         """
@@ -56,9 +56,6 @@ class Daemon(object):
 
         data = json.loads(message['data'])
 
-        if data["timestamp"] < start:
-            return
-
         if "node" not in data or data["node"] == self.node:
             self.speak(data["text"], data.get("language", "en"))
             
@@ -67,12 +64,11 @@ class Daemon(object):
         Runs the daemon
         """
 
-        start = time.time()
         self.subscribe()
 
         while True:
             try:
-                self.process(start)
+                self.process()
                 time.sleep(self.sleep)
             except Exception as exception:
                 print(exception)
