@@ -30,8 +30,7 @@ push: build
 create:
 	kubectl create -f k8s/pi-k8s.yaml
 
-update:
-	kubectl replace -f k8s/pi-k8s.yaml
-
 delete:
 	kubectl delete -f k8s/pi-k8s.yaml
+
+update: delete create
